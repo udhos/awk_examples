@@ -35,7 +35,7 @@ Print the first and last fields:
     $ echo a b c d | goawk '{ print $1, $NF }'
     a d
 
-NR is a build-in variable with the number of records read so far.
+NR is a built-in variable with the number of records read so far.
 
 Prefix each line with its line number:
 
