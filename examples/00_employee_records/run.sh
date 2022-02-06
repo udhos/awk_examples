@@ -36,3 +36,22 @@ echo ; echo "Compute the average pay:"
 
 egrep -v '^#' emp.data | goawk -f average_pay.awk
 
+echo ; echo "Finds the employee who is paid the most per hour:"
+
+goawk -f highest_rate.awk emp.data
+
+echo ; echo "wc:"
+
+goawk -f wc.awk emp.data
+
+echo ; echo "Average pay over 6:"
+
+goawk -f average_pay_over_6.awk emp.data
+
+echo ; echo "Reverse with while:"
+
+goawk -f reverse.awk emp.data
+
+echo ; echo "Reverse with for:"
+
+goawk -f reverse_for.awk emp.data

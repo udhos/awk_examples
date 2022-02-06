@@ -92,4 +92,163 @@ In awk, user-created variables are not declared.
 
 Awk variables used as numbers begin life with the value 0, so we didn't need to initialize emp.
 
-*** Handling Text
+Variables used to store strings begin life holding the null string (that is, the string containing no characters).
+
+The concatenation operation is represented in an awk program by writing string values one after the other.
+
+This program collects all the employee names into a single string, by appending each name and a blank to the previous value in the variable names. 
+
+          { names = names $1 " " }
+    END   { print names }
+
+Although NR retains its value in an END action, $0 does not. One way to print the last input line:
+
+        { last = $0 }
+    END { print last }
+
+length is a built-in function which counts the number of characters in a string.
+
+Printing the length of each line:
+
+    { print length($0) }
+
+Counting Lines, Words, and Characters:
+
+        {
+            nc = nc + length($0) + 1
+            nw = nw + NF
+        }
+    END { print NR, "lines,", nw, "words,", nc, "characters" }
+
+The following program computes the total and average pay of employees making more than $6.00 an hour. It uses an if to defend against division by zero in computing the average pay.
+
+    !/^#/ && $2 > 6 { n = n + 1; pay = pay + $2 * $3 }
+    END             {
+                        if (n > 0)
+                            print n, "employees, total pay is", pay,
+                                "average pay is", pay/n
+                        else
+                            print "no employees are paid more than $6/hour"
+                    }
+
+Awk provides arrays for storing groups of related values. The following program prints its input in reverse order by line.
+
+    # reverse - print input in reverse order by line
+
+        { line[NR] = $0 }   # remember each input line
+
+    END {
+            i = NR          # print lines in reverse order
+            while (i > 0) {
+                print line[i]
+                i = i - 1
+            }
+        }
+
+Reverse with FOR:
+
+    # reverse - print input in reverse order by line
+
+        { line[NR] = $0 }  # remember each input line
+    END {
+            for (i = NR; i > 0; i = i - 1)
+                print line[i]
+        }
+
+Print the total number of input lines:
+
+    END { print NR }
+
+Print the tenth input line:
+
+    NR == 10
+
+Print the last field of every input line:
+
+    { print $NF }
+
+Print the last field of the last input line:
+
+        { field = $NF }
+    END { print field }
+
+Print every input line with more than four fields:
+
+    NF > 4
+
+Print every input line in which the last field is more than 4:
+
+    $NF > 4
+
+Print the total number of fields in all input lines:
+
+        { nf = nf + NF }
+    END { print nf }
+
+Print the total number of lines that contain Beth:
+
+    /Beth/ { nlines = nlines + 1 }
+    END    { print nlines }
+
+Print the largest first field and the line that contains it (assumes some $1 is positive):
+
+    $1 > max { max = $1; maxline = $0 }
+    END      { print max, maxline }
+
+Print every line that has at least one field:
+
+    NF > 0
+
+Print every line longer than 80 characters:
+
+    length($0) > 80
+
+Print the number of fields in every line followed by the line itself:
+
+    { print NF, $0 }
+
+Print the first two fields, in opposite order, of every line:
+
+    { print $2, $1 }
+
+Exchange the first two fields of every line and then print the line:
+
+    $ echo 'a   b   c   d' | goawk '{ temp = $1; $1 = $2; $2 = temp; print }'
+    b a c d
+
+Print every line with the first field replaced by the line number:
+
+    { $1 = NR; print }
+
+Print every line after erasing the second field:
+
+    $ echo 'a    b    c    d' | goawk '{ $2 = ""; print }'
+    a  c d
+
+Print in reverse order the fields of every line:
+
+    {
+        for (i = NF; i > 0; i = i - 1) printf("%s ", $i)
+        printf ( "\n" )
+    }
+
+Print the sums of the fields of every line:
+
+    {
+        sum = 0
+        for (i = 1; i <= NF; i = i + 1) sum = sum + $i
+        print sum
+    }
+
+Add up all fields in all lines and print the sum:
+
+        { for (i = 1; i <= NF; i = i + 1) sum = sum + $i }
+    END { print sum }
+
+Print every line after replacing each field by its absolute value:
+
+    {
+        for (i = 1; i <= NF; i = i + 1) if ($i < 0) $i = -$i
+        print
+    }
+
