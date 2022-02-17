@@ -14,6 +14,8 @@
 
 https://quickref.me/awk
 
+[HANDY ONE-LINE SCRIPTS FOR AWK](https://gist.github.com/Rafe/3102414)
+
 # Hints
 
 There are only two types of data in awk: numbers and strings of characters.
