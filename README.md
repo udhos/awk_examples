@@ -10,6 +10,10 @@
 
 [The AWK Programming Language - HTML](https://nextjournal.com/btowers/the-awk-programming-language)
 
+# Reference
+
+https://quickref.me/awk
+
 # Hints
 
 There are only two types of data in awk: numbers and strings of characters.
@@ -252,3 +256,39 @@ Print every line after replacing each field by its absolute value:
         print
     }
 
+`$1 ~ /regex/` Field matches
+
+`$1 !~ /regex/` Field does not match
+
+Set field separator to regex with -F:
+
+    $ echo ab1c2de | gawk -F'[0-9]' '{ for(i=1;i<=NF;i++){printf $i" "} }'
+    ab c de
+
+Set field separator to regex with FS:
+
+    $ printf "ab1c2de\ntt9tt88tt\n" | gawk 'BEGIN { FS="[0-9]"} { for(i=1;i<=NF;i++){printf $i" "};print "" }'
+    ab c de
+    tt tt  tt
+
+Setting FS var from comand line:
+
+    $ printf "ab1c2de\ntt9tt88tt\n" | gawk -v FS="[0-9]" '{ for(i=1;i<=NF;i++){printf $i" "};print "" }'
+    ab c de
+    tt tt  tt
+
+Redirect lines to files specified in a column:
+
+    $ cat > /tmp/data
+    file1 John 45
+    file2 Mary 46
+    file3 Bob 11
+    file3 Ann 33
+
+    $ awk '{ print >> $1 }' /tmp/data
+
+    $ cat file*
+    file1 John 45
+    file2 Mary 46
+    file3 Bob 11
+    file3 Ann 33
